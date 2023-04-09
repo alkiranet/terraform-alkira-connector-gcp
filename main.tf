@@ -15,6 +15,11 @@ data "alkira_group" "group" {
   name = var.group
 }
 
+data "alkira_policy_prefix_list" "list" {
+  for_each = toset(var.gcp_routing.prefix_lists)
+  name     = each.key
+}
+
 data "alkira_segment" "segment" {
   name = var.segment
 }
@@ -23,6 +28,10 @@ locals {
 
   tag_id_list = [
     for v in data.alkira_billing_tag.tag : v.id
+  ]
+
+  pfx_id_list = [
+    for v in data.alkira_policy_prefix_list.list : v.id
   ]
 
 }
@@ -44,5 +53,10 @@ resource "alkira_connector_gcp_vpc" "connector" {
   name             = var.name
   segment_id       = data.alkira_segment.segment.id
   size             = var.size
+
+  gcp_routing {
+    custom_prefix    = var.gcp_routing.custom_prefix
+    prefix_list_ids  = local.pfx_id_list
+  }
 
 }
