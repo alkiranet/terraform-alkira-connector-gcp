@@ -37,6 +37,16 @@ variable "gcp_region" {
   type         = string
 }
 
+variable "gcp_routing" {
+  description  = "Routing options for VPC"
+
+  type = object({
+    custom_prefix  = optional(string, "ADVERTISE_DEFAULT_ROUTE")
+    prefix_lists   = optional(list(string), [])
+  })
+  default = {}
+}
+
 variable "gcp_vpc_id" {
   description  = "ID of GCP VPC that is being connected"
   type         = string
