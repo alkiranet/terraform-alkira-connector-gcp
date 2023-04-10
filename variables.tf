@@ -72,3 +72,13 @@ variable "size" {
   type         = string
   default      = "SMALL"
 }
+
+variable "vpc_subnet" {
+  description = "Subnets to onboard in place of entire VPC CIDR block"
+
+  type = list(object({
+    id    = optional(string)
+    cidr  = optional(string)
+  }))
+  default = []
+}
