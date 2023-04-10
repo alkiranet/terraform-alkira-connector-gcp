@@ -59,4 +59,16 @@ resource "alkira_connector_gcp_vpc" "connector" {
     prefix_list_ids  = local.pfx_id_list
   }
 
+  dynamic "vpc_subnet" {
+    for_each = {
+      for o in var.vpc_subnet : o.id => o
+    }
+
+    content {
+      fq_id  = vpc_subnet.value.id
+      cidr   = vpc_subnet.value.cidr
+    }
+
+  }
+
 }
